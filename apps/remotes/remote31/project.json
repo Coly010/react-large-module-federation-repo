@@ -1,0 +1,109 @@
+{
+  "name": "remote31",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/remotes/remote31/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/remotes/remote31",
+        "index": "apps/remotes/remote31/src/index.html",
+        "baseHref": "/",
+        "main": "apps/remotes/remote31/src/main.ts",
+        "tsConfig": "apps/remotes/remote31/tsconfig.app.json",
+        "assets": [
+          "apps/remotes/remote31/src/favicon.ico",
+          "apps/remotes/remote31/src/assets"
+        ],
+        "styles": ["apps/remotes/remote31/src/styles.css"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/remotes/remote31/webpack.config.ts"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/remotes/remote31/src/environments/environment.ts",
+              "with": "apps/remotes/remote31/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "webpackConfig": "apps/remotes/remote31/webpack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "remote31:build",
+        "hmr": true,
+        "port": 4231
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "remote31:build:development"
+        },
+        "production": {
+          "buildTarget": "remote31:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/remotes/remote31/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/remotes/remote31/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "remote31:build",
+        "watch": false,
+        "port": 4231
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "remote31:build:development"
+        },
+        "production": {
+          "buildTarget": "remote31:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

@@ -1,0 +1,109 @@
+{
+  "name": "remote86",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/remotes/remote86/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/remotes/remote86",
+        "index": "apps/remotes/remote86/src/index.html",
+        "baseHref": "/",
+        "main": "apps/remotes/remote86/src/main.ts",
+        "tsConfig": "apps/remotes/remote86/tsconfig.app.json",
+        "assets": [
+          "apps/remotes/remote86/src/favicon.ico",
+          "apps/remotes/remote86/src/assets"
+        ],
+        "styles": ["apps/remotes/remote86/src/styles.css"],
+        "scripts": [],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/remotes/remote86/webpack.config.ts"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/remotes/remote86/src/environments/environment.ts",
+              "with": "apps/remotes/remote86/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "webpackConfig": "apps/remotes/remote86/webpack.config.prod.ts"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/react:module-federation-dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "remote86:build",
+        "hmr": true,
+        "port": 4286
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "remote86:build:development"
+        },
+        "production": {
+          "buildTarget": "remote86:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/remotes/remote86/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/remotes/remote86/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "defaultConfiguration": "production",
+      "options": {
+        "buildTarget": "remote86:build",
+        "watch": false,
+        "port": 4286
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "remote86:build:development"
+        },
+        "production": {
+          "buildTarget": "remote86:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
